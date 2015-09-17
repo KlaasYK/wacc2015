@@ -13,3 +13,6 @@ hs_err_pid*
 /wacc2015/target/
 /chargingpole/target/
 /chargingpole/logs/
+/chargingpole/.settings/
+/chargingpole/.classpath
+/chargingpole/.project
