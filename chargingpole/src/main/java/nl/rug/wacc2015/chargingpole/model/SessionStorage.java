@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +26,11 @@ public class SessionStorage extends Observable implements Observer {
 	private double longitude = 0;
 	private double latitude = 0;
 	
+	// TODO: read these from file
 	private double kwhpersec = 0.01;
 	private double priceperkwh = 0.24;
 	
+	// TODO: read this from file
 	private String server = "http://127.0.0.1:9000/poleupdate";
 
 	private List<ChargeSession> sessionsReadyToSend;
@@ -49,7 +54,7 @@ public class SessionStorage extends Observable implements Observer {
 		setChanged();
 	}
 
-	public String getPoleID() {
+	public String getPoleIDString() {
 		if (poleID != null) {
 			return poleID;
 		}
@@ -63,14 +68,6 @@ public class SessionStorage extends Observable implements Observer {
 	 */
 	public int getNumSessionsReady() {
 		return sessionsReadyToSend.size();
-	}
-
-	public List<ChargeSession> getReadySessions() {
-		return sessionsReadyToSend;
-	}
-
-	public List<ChargeSession> getStoredSessions() {
-		return sessionsStored;
 	}
 
 	/**
@@ -152,7 +149,9 @@ public class SessionStorage extends Observable implements Observer {
 		String s = "{\"poleID\":\"" + poleID + ",";
 		s += "\"longitude\":" + longitude + ",";
 		s += "\"latitude\":" + latitude + ",";
-		s += "\"currentsession\":" + currentsession.getJSON() + ",";
+		if (currentsession != null) {
+			s += "\"currentsession\":" + currentsession.getJSON() + ",";
+		}
 		s += "\"sessionsStored\":[";
 		Iterator<ChargeSession> it = sessionsStored.iterator();
 		while (it.hasNext()) {
@@ -191,8 +190,79 @@ public class SessionStorage extends Observable implements Observer {
 	}
 
 	public String getServerJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		String s = "{\"poleID\":\"" + poleID + ",";
+		s += "\"longitude\":" + longitude + ",";
+		s += "\"latitude\":" + latitude + ",";
+		if (currentsession != null) {
+			s += "\"charging\":true,";
+		} else {
+			s += "\"charging\":false,";
+		}
+		s += "],\"sessionsReadyToSend\":[";
+		Iterator<ChargeSession> it = sessionsReadyToSend.iterator();
+		while (it.hasNext()) {
+			s += it.next().getJSON();
+			if (it.hasNext()) {
+				s += ",";
+			}
+		}
+		s += "]}";
+		return s;
+	}
+
+	/**
+	 * Stores all the ready sessions into the stored list
+	 */
+	public void storeReadySessions() {
+		sessionsStored.addAll(sessionsReadyToSend);
+		sessionsReadyToSend.clear();
+		updateGUI();
+	}
+
+	/**
+	 * Retrieves the data from the storage
+	 * @param o
+	 */
+	public void initStore(JSONObject o) throws JSONException{
+		if (!o.has("poleID")) {
+			throw new JSONException("Could not find poleID");
+		}
+		poleID = o.getString("poleID");
+		
+		if (!o.has("longitude")) {
+			throw new JSONException("Could not find longitude");
+		}
+		longitude = o.getDouble("longitude");
+		
+		if (!o.has("latitude")) {
+			throw new JSONException("Could not find latitude");
+		}
+		latitude = o.getDouble("latitude");
+		
+		if (!o.has("sessionsStored")) {
+			throw new JSONException("Could not find sessionsStored");
+		}
+		JSONArray arr = o.getJSONArray("sessionsStored");
+		for (int i = 0; i < arr.length(); ++i) {
+			sessionsStored.add(new ChargeSession(arr.getJSONObject(i)));
+		}
+		arr = o.getJSONArray("sessionsreadyToSend");
+		for (int i = 0; i < arr.length(); ++i) {
+			sessionsReadyToSend.add(new ChargeSession(arr.getJSONObject(i)));
+		}
+		
+		if (o.has("currentsession")) {
+			currentsession = new ChargeSession(o.getJSONObject("currentsession"));
+			// TODO: start the charging again, when finished
+		}
+		
+	}
+	
+	/**
+	 * Store the cotents to disk
+	 */
+	public void store() {
+		// TODO:
 	}
 
 }

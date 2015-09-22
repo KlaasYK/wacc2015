@@ -112,7 +112,7 @@ public class MainWindow extends JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		SessionStorage ss = (SessionStorage) o;
-		setTitle(ss.getPoleID());
+		setTitle(ss.getPoleIDString());
 		setScrollText(ss);
 		this.repaint();
 	}

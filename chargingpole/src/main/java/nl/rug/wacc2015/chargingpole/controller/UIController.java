@@ -80,7 +80,7 @@ public class UIController implements ActionListener {
 	 * Called when main window is closed
 	 */
 	private void shutdown() {
-		// TODO: make a clean exit
+		ss.store();
 		l.info("Shutting down");
 		System.exit(0);
 	}

@@ -9,6 +9,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,6 @@ public class Heartbeat implements Runnable {
 
 	private void doRequest() {
 		// FIXME: use a timeout or something
-		l.debug("Ping");
 		String data = ss.getServerJSON();
 		try {
 			Builder req = resource.request();
@@ -55,12 +55,15 @@ public class Heartbeat implements Runnable {
 				return;
 			}
 			String resdata = res.readEntity(String.class);
-			// Do something
-			
+			JSONObject o = new JSONObject(resdata);
+			if (o.has("success") && o.getBoolean("success")) {
+				ss.storeReadySessions();
+			} else {
+				l.warn("Server error: {}", o.getString("errormsg"));
+			}
 		} catch (ProcessingException ex) {
 			l.warn("Server not reachable");
 		}
-		l.debug("Pong");
 	}
 
 	@Override
