@@ -1,5 +1,136 @@
 @(message: String)
 
 @layout("WACC Play Demo") {
-    <p><a href="/items">Go to shop</a></p>
+    <header id="header">
+        <ul class="container header-inner">
+            <li class="logo hidden-xs">
+                <a href="">Smart Charging Stations</a>
+            </li>
+            <li class="logo visible-xs">
+                <a href="">SCS</a>
+            </li>
+            <li class="pull-right">
+                <ul class="top-menu">
+                    <li id="top-search">
+                        <a class="tm-search" href=""></a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="tm-notification" href=""><i class="tmn-counts">9</i></a>
+                        <div class="dropdown-menu dropdown-menu-lg pull-right">
+                            <div class="listview" id="notifications">
+                                <div class="lv-header">
+                                    Notification
+
+                                    <ul class="actions">
+                                        <li class="dropdown">
+                                            <a href="" data-clear="notification">
+                                                <i class="zmdi zmdi-check-all"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="lv-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="tm-settings" href=""></a>
+                        <ul class="dropdown-menu dm-icon pull-right">
+                            <li>
+                                <a href=""><i class="zmdi zmdi-settings"></i> Settings</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+        </ul>
+
+            <!-- Top Search Content -->
+        <div id="top-search-wrap">
+            <input type="text">
+            <i id="top-search-close">&times;</i>
+        </div>
+    </header>
+
+    <section id="main">
+
+        <section id="content">
+            <div class="container">
+                <div class="block-header">
+                    <h2>Dashboard</h2>
+
+                    <ul class="actions">
+                        <li>
+                            <a href="">
+                                <i class="zmdi zmdi-trending-up"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="zmdi zmdi-check-all"></i>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="" data-toggle="dropdown">
+                                <i class="zmdi zmdi-more-vert"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="">Refresh</a>
+                                </li>
+                                <li>
+                                    <a href="">Manage Widgets</a>
+                                </li>
+                                <li>
+                                    <a href="">Widgets Settings</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="location">
+                            <div class='card'>
+                                <div class="card-header">
+                                    <h2>Charging Poles</h2>
+                                </div>
+
+                                <div class="card-body">
+                                    <table id="jqGrid"></table>
+                                    <div id="jqGridPager"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <footer id="footer">
+        2015 - Smart Charging Poles
+
+        <ul class="f-menu">
+            <li><a href="">Home</a></li>
+            <li><a href="">Dashboard</a></li>
+            <li><a href="">Reports</a></li>
+            <li><a href="">Support</a></li>
+            <li><a href="">Contact</a></li>
+        </ul>
+    </footer>
 }

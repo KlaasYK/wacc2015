@@ -1,0 +1,295 @@
+[
+  {
+    "_id": "55f6b226f867c7fa264e7c00",
+    "name": "Benzinestation Hoofdstraat",
+    "street": "Hoofdstraat",
+    "streetNumber": 1,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "latitude": 53.010008,
+    "longitude": 5.658015,
+    "status": "charging",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b226f7b6c71e546dd15b",
+    "name": "Laadpunt 12",
+    "street": "Hoofdstraat",
+    "streetNumber": 2,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": true,
+    "latitude": 53.103407,
+    "longitude": 6.413633,
+    "status": "charging",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b226ea3b01d70c39c5c9",
+    "name": "Benzinestation A12",
+    "street": "Hoofdstraat",
+    "streetNumber": 3,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": false,
+    "latitude": 51.968527,
+    "longitude": 6.074147,
+    "status": "charging",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b226724c6fb4aa0341d6",
+    "name": "Andere Naam",
+    "street": "Hoofdstraat",
+    "streetNumber": 4,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": false,
+    "latitude": 51.797443,
+    "longitude": 4.325963,
+    "status": "idle",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b226a8403d9c2c67ba4a",
+    "name": "Top Laadpunt",
+    "street": "Hoofdstraat",
+    "streetNumber": 5,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": true,
+    "latitude": 51.932704,
+    "longitude": 4.286189,
+    "status": "charging",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b226f317a5fe0db875ce",
+    "name": "Benzinestation Kerklaan",
+    "street": "Hoofdstraat",
+    "streetNumber": 6,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": true,
+    "latitude": 52.143838,
+    "longitude": 4.85794,
+    "status": "idle",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  },
+  {
+    "_id": "55f6b2263dd0cb3ff5932043",
+    "name": "Benzinestation Adorp",
+    "street": "Hoofdstraat",
+    "streetNumber": 7,
+    "zipcode": "1234 AB",
+    "city": "Amsterdam",
+    "isActive": true,
+    "latitude": 51.967843,
+    "longitude": 5.073996,
+    "status": "idle",
+    "chargingsessions": [
+        {
+            "starttime": "09-09-2015 15:00",
+            "endtime": "09-09-2015 16:23",
+            "plate": "AA-BB-12",
+            "kwh": 123,
+            "price": 12.50
+        },
+        {
+            "starttime": "09-09-2015 16:52",
+            "endtime": "09-09-2015 18:06",
+            "plate": "CA-BA-12",
+            "kwh": 95,
+            "price": 8.42
+        },
+        {
+            "starttime": "09-09-2015 18:45",
+            "endtime": "09-09-2015 20:15",
+            "plate": "TT-123-AB",
+            "kwh": 110,
+            "price": 10.50
+        },
+        {
+            "starttime": "09-09-2015 22:50",
+            "endtime": "10-09-2015 00:20",
+            "plate": "BA-CA-45",
+            "kwh": 150,
+            "price": 16.00
+        }
+    ]
+  }
+]
