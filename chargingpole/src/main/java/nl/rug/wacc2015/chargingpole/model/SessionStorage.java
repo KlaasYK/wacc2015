@@ -31,7 +31,7 @@ public class SessionStorage extends Observable implements Observer {
 	private double priceperkwh = 0.24;
 	
 	// TODO: read this from file
-	private String server = "http://127.0.0.1:9000/poleupdate";
+	private String server = "http://localhost:9000/poleupdate";
 
 	private List<ChargeSession> sessionsReadyToSend;
 	private List<ChargeSession> sessionsStored;
