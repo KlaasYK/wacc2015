@@ -21,6 +21,9 @@ import nl.rug.wacc2015.chargingpole.controller.ChargeController;
  */
 public class SessionStorage extends Observable implements Observer {
 
+	private static final int IDLE = 1;
+	private static final int CHARGING = 2;
+	
 	private String poleID = null;
 
 	private double longitude = 0;
@@ -31,7 +34,7 @@ public class SessionStorage extends Observable implements Observer {
 	private double priceperkwh = 0.24;
 	
 	// TODO: read this from file
-	private String server = "http://localhost:9000/poleupdate";
+	private String server = "http://localhost:9000/heartbeat";
 
 	private List<ChargeSession> sessionsReadyToSend;
 	private List<ChargeSession> sessionsStored;
@@ -186,19 +189,19 @@ public class SessionStorage extends Observable implements Observer {
 	}
 
 	public String getServer() {
-		return server;
+		return server + "/" + getPoleIDString();
 	}
 
 	public String getServerJSON() {
-		String s = "{\"poleID\":\"" + poleID + ",";
+		String s = "{\"id\":\"" + poleID + "\",";
 		s += "\"longitude\":" + longitude + ",";
 		s += "\"latitude\":" + latitude + ",";
 		if (currentsession != null) {
-			s += "\"charging\":true,";
+			s += "\"status\":"+CHARGING+",";
 		} else {
-			s += "\"charging\":false,";
+			s += "\"status\":"+IDLE+",";
 		}
-		s += "],\"sessionsReadyToSend\":[";
+		s += "\"sessions\":[";
 		Iterator<ChargeSession> it = sessionsReadyToSend.iterator();
 		while (it.hasNext()) {
 			s += it.next().getJSON();
@@ -246,7 +249,7 @@ public class SessionStorage extends Observable implements Observer {
 		for (int i = 0; i < arr.length(); ++i) {
 			sessionsStored.add(new ChargeSession(arr.getJSONObject(i)));
 		}
-		arr = o.getJSONArray("sessionsreadyToSend");
+		arr = o.getJSONArray("sessionsReadyToSend");
 		for (int i = 0; i < arr.length(); ++i) {
 			sessionsReadyToSend.add(new ChargeSession(arr.getJSONObject(i)));
 		}
@@ -263,6 +266,12 @@ public class SessionStorage extends Observable implements Observer {
 	 */
 	public void store() {
 		// TODO:
+	}
+
+	public void initEmpty(String poleid) {
+		poleID = poleid;
+		longitude = 0;
+		latitude = 0;
 	}
 
 }

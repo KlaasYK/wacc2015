@@ -9,6 +9,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class Heartbeat implements Runnable {
 	/**
 	 * Send an update every 30 seconds
 	 */
-	private static final long HEART_RATE = 1000 * 30;
+	private static final long HEART_RATE = 1000 * 10;
 
 	public Heartbeat(SessionStorage ss) {
 		this.ss = ss;
@@ -39,10 +40,9 @@ public class Heartbeat implements Runnable {
 		String data = ss.getServerJSON();
 		try {
 			Builder req = resource.request();
-
 			req.accept(MediaType.APPLICATION_JSON);
 			req.acceptEncoding("utf-8");
-			Response res = req.post(Entity.entity(data, MediaType.APPLICATION_JSON));
+			Response res = req.put(Entity.entity(data, MediaType.APPLICATION_JSON));
 			switch (res.getStatus()) {
 			case 200:
 				// Do nothing
@@ -52,15 +52,21 @@ public class Heartbeat implements Runnable {
 				return;
 			default:
 				l.warn("Server error: {}", res.getStatus());
+				l.debug("{}", res.readEntity(String.class));
 				return;
 			}
 			String resdata = res.readEntity(String.class);
-			JSONObject o = new JSONObject(resdata);
-			if (o.has("success") && o.getBoolean("success")) {
-				ss.storeReadySessions();
-			} else {
-				l.warn("Server error: {}", o.getString("errormsg"));
+			try {
+				JSONObject o = new JSONObject(resdata);
+				if (o.has("success") && o.getBoolean("success")) {
+					ss.storeReadySessions();
+				} else {
+					l.warn("Server error: {}", o.getString("errormsg"));
+				}
+			} catch (JSONException e) {
+				l.warn("Malformed response: {}", resdata);
 			}
+			
 		} catch (ProcessingException ex) {
 			l.warn("Server not reachable");
 		}

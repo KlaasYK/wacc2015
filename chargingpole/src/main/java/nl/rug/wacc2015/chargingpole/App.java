@@ -43,6 +43,7 @@ public class App {
 		ss = new SessionStorage();
 		String poleid = null;
 		if (!arglist.contains("--poleid")) {
+			l.warn("Using default poleid");
 			poleid = "TEST1234";
 		} else {
 			for (int i = 0; i < args.length; ++i) {
@@ -65,6 +66,9 @@ public class App {
 			} catch (JSONException ex) {
 				l.error("Could not load file: {} Cause: {}", p.toString(), ex.getMessage());
 			}
+		} else {
+			l.warn("No file found, creating an empty one");
+			ss.initEmpty(poleid);
 		}
 		
 		uic = new UIController(ss);
