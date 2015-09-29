@@ -65,6 +65,7 @@ object StationStore extends StationStore with StationsJson{
   def create(id: String, latitude: Double, longitude: Double): Option[Station] = {
     val station = Station(id, latitude, longitude, 0, new Date().getTime())
     stations.put(id, station)
+    // TODO: check if insert worked (change return type to future)
     collection.insert(station).map(lastError => None)
     Some(station)
   }
@@ -72,7 +73,9 @@ object StationStore extends StationStore with StationsJson{
   def heartbeat(id: String, latitude: Double, longitude: Double, status: Int): Option[Station] = {
     // TODO: implement database saving
     val station = Station(id, latitude, longitude, status, new Date().getTime())
-    stations.replace(id,station)
+    val query = Json.obj("id" -> id)
+    // TODO: check update
+    collection.update(query,station)
     Some(station)
   }
 
