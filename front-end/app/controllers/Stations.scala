@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 import play.api.mvc.Controller
 
-
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.modules.reactivemongo.{ // ReactiveMongo Play2 plugin
 MongoController,
@@ -37,15 +37,15 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
     Ok(Json.toJson(store.list))
   }
 
-  def details(id: String) = Action {
-    store.get(id) match {
+  def details(id: String) = Action.async {
+    store.get(id).map {
       case Some(station) => Ok(Json.toJson(station))
       case None => NotFound(Json.parse("{}"))
     }
   }
-
-  def heartbeat(id: String) = Action(parse.json[CreateStation]) { implicit request =>
-    store.get(id) match {
+  
+  def heartbeat(id: String) = Action.async(parse.json[CreateStation]) { implicit request =>
+   store.get(id).map {
       case Some(station) => {
         store.heartbeat(id,request.body.latitude, request.body.longitude, request.body.status) match {
           case Some(station) => Ok(Json.parse("{\"success\":true}"))
@@ -64,7 +64,7 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
           case None => Ok(Json.parse("{\"success\":false,\"errormsg\":\"could not create new station\"}"))
         }
       } // None
-    } // get(id)
+    } // get(id)*/
   } // heartbeat
 
 }

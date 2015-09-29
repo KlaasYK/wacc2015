@@ -2,9 +2,11 @@ package models
 
 import java.util.Date
 
-import controllers.{StationsJson, CreateStation}
+import play.api.libs.functional.syntax._
+
 import play.api.libs.json._
-import play.modules.reactivemongo.json.collection.JSONCollection
+import play.modules.reactivemongo.json._
+import play.modules.reactivemongo.json.collection.{JSONQueryBuilder, JSONCollection}
 
 import scala.collection.concurrent.TrieMap
 
@@ -18,38 +20,55 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
+case class CreateStation(id: String, latitude: Double, longitude: Double, status: Int)
+
+trait StationsJson {
+  implicit val writesStation = Json.writes[Station]
+  implicit val readsStation = (
+    (__ \ "id").read(Reads.minLength[String](1)) and
+      (__ \ "latitude").read(Reads.min[Double](0)) and
+      (__ \ "longitude").read(Reads.min[Double](0)) and
+      (__ \ "status").read(Reads.min[Int](0))
+    )(CreateStation.apply _)
+}
+
 case class Station(id: String, latitude: Double, longitude: Double, status:Int, lastHeartbeat:Long)
 
 trait StationStore {
   def list(): Seq[Station]
   def create(id:String, latitude: Double, longitude: Double):Option[Station]
-  def get(id:String): Option[Station]
+  def get(id:String): Future[Option[Station]]
   def heartbeat(id:String, latitude: Double, longitude: Double, status:Int): Option[Station]
 }
 
 object StationStore extends StationStore with StationsJson{
-  private def driver = registerDriverShutdownHook(MongoDriver()) // first pool
-  private def connection = driver.connection(List("localhost:27017"))
-  private def collection = connection.db("wacc").collection("stations") : JSONCollection
+  implicit val stationReads = Json.reads[Station]
+
+  // TODO: make these somewhere global!
+  def driver = registerDriverShutdownHook(MongoDriver()) // first pool
+  def connection = driver.connection(List("localhost:27017/test"))
+  def collection = connection.db("wacc").collection("stations") : JSONCollection
 
   private val stations = TrieMap.empty[String,Station]
 
   def list: Seq[Station] = {
+    // TODO: implement read from database
     stations.values.to[Seq]
   }
 
-  def get(id:String): Option[Station] = {
+  def get(id:String): Future[Option[Station]] = {
     // TODO: implement read from database
     //stations.get(id)
-    val futurestation = collection.find(Json.obj("id" -> id)).one[Station]
-    futurestation.map(
-      station => Some(station)
-    )
-    None
+    val query = Json.obj("id" -> id)
+    collection.find(query).one[Station]
+    /*val fut = collection.find(query).one[Station]
+    fut.map( station => {
+      System.out.println(station)
+    })
+    None*/
   }
 
   def create(id: String, latitude: Double, longitude: Double): Option[Station] = {
-    // TODO: implement database saving
     val station = Station(id, latitude, longitude, 0, new Date().getTime())
     stations.put(id, station)
     collection.insert(station).map(lastError => None)
