@@ -35,7 +35,7 @@ trait StationsJson {
 case class Station(id: String, latitude: Double, longitude: Double, status:Int, lastHeartbeat:Long)
 
 trait StationStore {
-  def list(): Seq[Station]
+  def list(): Cursor[Station]
   def create(id:String, latitude: Double, longitude: Double):Option[Station]
   def get(id:String): Future[Option[Station]]
   def heartbeat(id:String, latitude: Double, longitude: Double, status:Int): Option[Station]
@@ -46,26 +46,20 @@ object StationStore extends StationStore with StationsJson{
 
   // TODO: make these somewhere global!
   def driver = registerDriverShutdownHook(MongoDriver()) // first pool
-  def connection = driver.connection(List("localhost:27017/test"))
+  def connection = driver.connection(List("localhost:27017"))
   def collection = connection.db("wacc").collection("stations") : JSONCollection
 
   private val stations = TrieMap.empty[String,Station]
 
-  def list: Seq[Station] = {
-    // TODO: implement read from database
-    stations.values.to[Seq]
+  def list: Cursor[Station] = {
+    // TODO: limit
+    val query = Json.obj()
+    collection.find(query).cursor[Station]()
   }
 
   def get(id:String): Future[Option[Station]] = {
-    // TODO: implement read from database
-    //stations.get(id)
     val query = Json.obj("id" -> id)
     collection.find(query).one[Station]
-    /*val fut = collection.find(query).one[Station]
-    fut.map( station => {
-      System.out.println(station)
-    })
-    None*/
   }
 
   def create(id: String, latitude: Double, longitude: Double): Option[Station] = {

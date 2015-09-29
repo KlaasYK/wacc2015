@@ -17,6 +17,8 @@ ReactiveMongoApi,
 ReactiveMongoComponents
 }
 
+import reactivemongo.api.{Cursor, MongoConnection, MongoDriver}
+
 case class CreateStation(id: String, latitude: Double, longitude: Double, status: Int)
 
 trait StationsJson {
@@ -33,8 +35,10 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   extends Controller with MongoController with ReactiveMongoComponents  with StationsJson  {
   val store = models.StationStore
 
-  def list = Action {
-    Ok(Json.toJson(store.list))
+  def list = Action.async {
+    store.list.collect[Seq]().map(
+      stations => Ok(Json.toJson(stations))
+    )
   }
 
   def details(id: String) = Action.async {
@@ -43,7 +47,7 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
       case None => NotFound(Json.parse("{}"))
     }
   }
-  
+
   def heartbeat(id: String) = Action.async(parse.json[CreateStation]) { implicit request =>
    store.get(id).map {
       case Some(station) => {
