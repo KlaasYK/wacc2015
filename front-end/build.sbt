@@ -16,8 +16,9 @@ libraryDependencies ++= Seq(
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
+
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 
 // Uncomment for Play >2.4 style (currently not supported in IntelliJ
-// routesGenerator := InjectedRoutesGenerator
+routesGenerator := InjectedRoutesGenerator

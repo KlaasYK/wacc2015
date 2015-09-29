@@ -5,7 +5,17 @@ import play.api.mvc._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import javax.inject.Inject
 
+import play.api.mvc.Controller
+
+
+
+import play.modules.reactivemongo.{ // ReactiveMongo Play2 plugin
+MongoController,
+ReactiveMongoApi,
+ReactiveMongoComponents
+}
 
 case class CreateStation(id: String, latitude: Double, longitude: Double, status: Int)
 
@@ -19,7 +29,8 @@ trait StationsJson {
     )(CreateStation.apply _)
 }
 
-object Stations  extends Controller  with StationsJson  {
+class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
+  extends Controller with MongoController with ReactiveMongoComponents  with StationsJson  {
   val store = models.StationStore
 
   def list = Action {

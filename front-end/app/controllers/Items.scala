@@ -21,7 +21,7 @@ trait ItemsJson {
     )(CreateItem.apply _)
 }
 
-object Items extends Controller with ItemsJson {
+class Items extends Controller with ItemsJson {
   val shop = models.Shop
 
   val createItemFormModel = Form(mapping(
