@@ -1,6 +1,6 @@
 var map, json;
 
-$.getJSON( "./assets/tmp/locations.json", function( jsondata ) {
+$.getJSON( "./stations", function( jsondata ) {
   json = jsondata;
   console.log("Loaded location data");
 });
@@ -8,14 +8,15 @@ $.getJSON( "./assets/tmp/locations.json", function( jsondata ) {
 $.jgrid.defaults.styleUI = 'Bootstrap';
  
 $(document).ready(function () {
-    $("#jqGrid").jqGrid({
-            url: '/assets/tmp/locations.json',
+    var grid = $("#jqGrid").jqGrid({
+            url: '/stations',
             datatype: "json",
              colModel: [
-                    { label: 'Name', name: 'name', width: 150 },
-                    { label: 'Street', name: 'street', width: 90 },
-                    { label: 'City', name: 'city', width: 100 },
-                    { label: 'Status', name: 'status', width: 80, sorttype: 'text' },     
+                    { label: 'Pole ID', name: 'id', width: 150 },
+                    //{ label: 'Street', name: 'street', width: 90 },
+                    //{ label: 'City', name: 'city', width: 100 },
+                    { label: 'Status', name: 'status', width: 80, sorttype: 'text' },
+                    { label: 'Last active', name:'lastHeartbeat', width: 100, formatter:'date', formatoptions: {srcformat: 'U/1000', newformat:'d/m/Y H:i:s'}}
             ],
             autowidth: true,
             shrinkToFit: true,
@@ -23,7 +24,11 @@ $(document).ready(function () {
             rowNum: 30,
             pager: "#jqGridPager"
     });
-        
+
+    setInterval(function() {
+        grid.trigger("reloadGrid",[{current:true}]);
+    }, 10000);
+
     (function(){
         $('body').on('click', '#top-search > a', function(e){
             e.preventDefault();
@@ -67,6 +72,14 @@ function initMap() {
         });
 
         google.maps.event.addListener(marker, 'click', function() {
+            var location = $.get('location');
+
+            location.done(function() {
+                //console.log(location);
+               $("#location").html(location.responseText);
+            });
+
+            /*
             $.ajax({                                            
                  url: 'location',
                  data: 'id='+this.url+'&name='+this.name+'',    
@@ -79,6 +92,7 @@ function initMap() {
                     console.log(thrownError);
                  },
             });
+            */
         });
     }
 };
