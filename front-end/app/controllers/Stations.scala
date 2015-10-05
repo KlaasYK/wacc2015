@@ -9,15 +9,13 @@ import javax.inject.Inject
 
 import play.api.mvc.Controller
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import play.modules.reactivemongo.{ // ReactiveMongo Play2 plugin
 MongoController,
 ReactiveMongoApi,
 ReactiveMongoComponents
 }
 
-import reactivemongo.api.{Cursor, MongoConnection, MongoDriver}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 case class CreateStation(id: String, latitude: Double, longitude: Double, status: Int)
 
