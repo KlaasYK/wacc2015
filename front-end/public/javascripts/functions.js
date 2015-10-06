@@ -7,7 +7,7 @@ pstatus.DOWN = 0;
 pstatus.IDLE = 1;
 pstatus.CHARGING = 2;
 
-var DOWNTIMEOUT = 25000;
+var DOWNTIMEOUT = 2000;
 
 $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -21,14 +21,9 @@ function setTimeOutClosure(poleid) {
         $('#jqGrid').jqGrid('setRowData', poleid, rowData);
 
         // TODO: Update notifications
-        notifications.unshift(poleid);
+        notifications.unshift([0, poleid]);
         updateNotifications();
     },DOWNTIMEOUT);
-}
-
-function updateNotifications()
-{
-    $('#notificationcount').css('visibility', 'visible').text(notifications.length);
 }
 
 $(document).ready(function () {
@@ -80,6 +75,7 @@ $(document).ready(function () {
     var notificationbutton = document.getElementById('notificationbutton');
     notificationbutton.addEventListener('click', function() {
         $('#notificationcount').css('visibility', 'hidden');
+        notifications.length = 0;
     }, false);
 });
 
@@ -122,6 +118,33 @@ $.getJSON( "./stations", function( jsondata ) {
         }
     }
 });
+
+function updateNotifications()
+{
+    $('#notifications').html("");
+    for ( var item in notifications )
+    {
+        if ( $('#notifications > a').length === 6 ) { break; }
+        var warning = getWarning(notifications[item][0], notifications[item][1])
+        var notification = "<a class=\"lv-item\" href=\"\">" +
+            "<div class=\"lv-title\">" + warning[0] + "</div>" +
+            "<small class=\"lv-small\">" + warning[1] + "</small>" +
+            "</a>";
+        $('#notifications').append(notification);
+    }
+    $('#notificationcount').css('visibility', 'visible').text(notifications.length);
+}
+
+function getWarning(code, poleid)
+{
+    switch (code)
+    {
+        case 0:
+            return ["Pole offline!", "Pole " + poleid + " seems to be offline."];
+        case 1:
+            return ["Pole added", "Pole " + poleid + " showed up for the first time."];
+    }
+}
 
 function convertStatus(cellValue)
 {
