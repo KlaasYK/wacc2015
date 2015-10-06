@@ -1,5 +1,6 @@
 var map, json;
 var poledata = Array();
+var notifications = Array();
 
 var pstatus = {};
 pstatus.DOWN = 0;
@@ -20,9 +21,14 @@ function setTimeOutClosure(poleid) {
         $('#jqGrid').jqGrid('setRowData', poleid, rowData);
 
         // TODO: Update notifications
-
-
+        notifications.unshift(poleid);
+        updateNotifications();
     },DOWNTIMEOUT);
+}
+
+function updateNotifications()
+{
+    $('#notificationcount').css('visibility', 'visible').text(notifications.length);
 }
 
 $(document).ready(function () {
@@ -70,6 +76,11 @@ $(document).ready(function () {
             $('#header').removeClass('search-toggled');
         });
     })();
+
+    var notificationbutton = document.getElementById('notificationbutton');
+    notificationbutton.addEventListener('click', function() {
+        $('#notificationcount').css('visibility', 'hidden');
+    }, false);
 });
 
 // Load grid
