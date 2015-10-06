@@ -8,6 +8,28 @@ $.getJSON( "./stations", function( jsondata ) {
 $.jgrid.defaults.styleUI = 'Bootstrap';
  
 $(document).ready(function () {
+    var socket = new WebSocket('ws://' + location.host + "/test");
+
+    // REMOVE test
+    socket.onopen = function () {
+        console.log('Connected!');
+        socket.send("test");
+    };
+
+    // TODO: do something with the data ;)
+    socket.onmessage = function (event) {
+        console.log('Received data: ' + event.data);
+    };
+
+    socket.onclose = function () {
+        console.log('Connection closed');
+    };
+
+    // Close the connection when leaving the page ;)
+    $(window).bind('beforeunload', function(){
+        socket.close();
+    });
+
     var grid = $("#jqGrid").jqGrid({
             url: '/stations',
             datatype: "json",
@@ -25,9 +47,10 @@ $(document).ready(function () {
             pager: "#jqGridPager"
     });
 
+    /* disabled polling (using websockets instead)
     setInterval(function() {
         grid.trigger("reloadGrid",[{current:true}]);
-    }, 10000);
+    }, 10000);*/
 
     (function(){
         $('body').on('click', '#top-search > a', function(e){

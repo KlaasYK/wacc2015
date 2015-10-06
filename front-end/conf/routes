@@ -11,6 +11,7 @@ GET           /stations/:id          controllers.Stations.details(id: String)
 
 PUT          /heartbeat/:id          controllers.Stations.heartbeat(id: String)
 
+GET          /test                   controllers.Sockets.socket
 
 # Location
 GET           /location              controllers.Application.location
