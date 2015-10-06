@@ -17,8 +17,6 @@ class MyWebSocketActor(out: ActorRef) extends Actor {
   }
 }
 
-
-
 class Sockets extends Controller {
   /* old thingy
    def socket = WebSocket.acceptWithActor[String, String] { request => out =>
@@ -45,5 +43,12 @@ class Sockets extends Controller {
     })
     (in,out)
   }
+
+  def stuff = Action {
+    // Do other stuff
+    roomConnections.foreach(_.push("This is an anouncement"))
+    Ok("test");
+  }
+
 }
 

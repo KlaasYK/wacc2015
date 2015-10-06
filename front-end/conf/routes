@@ -5,13 +5,15 @@
 # Home page
 GET           /                      controllers.Application.index
 
+GET           /stationsfeed          controllers.Stations.feed
 GET           /stations              controllers.Stations.list
 
 GET           /stations/:id          controllers.Stations.details(id: String)
 
-PUT          /heartbeat/:id          controllers.Stations.heartbeat(id: String)
+PUT           /heartbeat/:id         controllers.Stations.heartbeat(id: String)
 
-GET          /test                   controllers.Sockets.socket
+GET           /test                  controllers.Sockets.socket
+GET           /stuff                 controllers.Sockets.stuff
 
 # Location
 GET           /location              controllers.Application.location

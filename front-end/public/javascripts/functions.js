@@ -8,24 +8,23 @@ $.getJSON( "./stations", function( jsondata ) {
 $.jgrid.defaults.styleUI = 'Bootstrap';
  
 $(document).ready(function () {
-    var socket = new WebSocket('ws://' + location.host + "/test");
+    var socket = new WebSocket('ws://' + location.host + "/stationsfeed");
 
     // REMOVE test
     socket.onopen = function () {
-        console.log('Connected!');
-        socket.send("test");
+        console.log('Websocket Connected!');
     };
 
     // TODO: do something with the data ;)
     socket.onmessage = function (event) {
-        console.log('Received data: ' + event.data);
+        console.log(JSON.parse(event.data));
     };
 
     socket.onclose = function () {
-        console.log('Connection closed');
+        console.log('Websocket Connection closed');
     };
 
-    // Close the connection when leaving the page ;)
+    // Close the connection when leaving the page
     $(window).bind('beforeunload', function(){
         socket.close();
     });
