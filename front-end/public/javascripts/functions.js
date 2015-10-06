@@ -1,8 +1,37 @@
 var map, json;
+var poledata = Array();
+
+var pstatus = {};
+pstatus.DOWN = 0;
+pstatus.IDLE = 1;
+pstatus.CHARGING = 2;
+
+var DOWNTIMEOUT = 25000;
+function setTimeOutClosure(poleid) {
+    return setTimeout(function(){
+        poledata[poleid].status = pstatus.DOWN;
+        // TODO: Update the view with this pole down
+        console.log(poleid + " is down!");
+    },DOWNTIMEOUT);
+}
 
 $.getJSON( "./stations", function( jsondata ) {
   json = jsondata;
   console.log("Loaded location data");
+    // structure which prevents looping in heartbeat updates ;)
+    for (var i = 0; i < json.length; i++) {
+        var pole = json[i];
+        poledata[pole.id] = pole;
+        var curtime = new Date().getTime();
+        if (pole.status != pstatus.DOWN && (pole.lastHeartbeat + DOWNTIMEOUT) > curtime) {
+            // Set timeout
+            poledata[pole.id].timeout = setTimeOutClosure(pole.id);
+        } else {
+            poledata[pole.id].status = pstatus.DOWN;
+            console.log(pole.id + " is down!");
+        }
+    }
+    // TODO: update the grid
 });
 
 $.jgrid.defaults.styleUI = 'Bootstrap';
@@ -15,9 +44,12 @@ $(document).ready(function () {
         console.log('Websocket Connected!');
     };
 
-    // TODO: do something with the data ;)
     socket.onmessage = function (event) {
-        console.log(JSON.parse(event.data));
+        var pole = JSON.parse(event.data);
+        console.log(pole);
+        if (poledata[pole.id].timeout) {clearTimeout(poledata[pole.id].timeout);}
+        poledata[pole.id] = pole;
+        poledata[pole.id].timeout = setTimeOutClosure(pole.id);
     };
 
     socket.onclose = function () {
