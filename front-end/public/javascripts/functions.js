@@ -7,7 +7,7 @@ pstatus.DOWN = 0;
 pstatus.IDLE = 1;
 pstatus.CHARGING = 2;
 
-var DOWNTIMEOUT = 2000;
+var DOWNTIMEOUT = 25000;
 
 $.jgrid.defaults.styleUI = 'Bootstrap';
 
