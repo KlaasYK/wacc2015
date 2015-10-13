@@ -1,10 +1,9 @@
 package controllers
 
-import models.Station
+import models.{CreateStation, StationsJson}
 import play.api.libs.iteratee.{Iteratee, Concurrent}
 import play.api.libs.iteratee.Concurrent.Channel
 import play.api.mvc._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 import javax.inject.Inject
@@ -18,18 +17,6 @@ ReactiveMongoComponents
 }
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-case class CreateStation(id: String, latitude: Double, longitude: Double, status: Int)
-
-trait StationsJson {
-  implicit val writesStation = Json.writes[Station]
-  implicit val readsCreateStation = (
-      (__ \ "id").read(Reads.minLength[String](1)) and
-      (__ \ "latitude").read(Reads.min[Double](0)) and
-      (__ \ "longitude").read(Reads.min[Double](0)) and
-      (__ \ "status").read(Reads.min[Int](0))
-    )(CreateStation.apply _)
-}
 
 class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   extends Controller with MongoController with ReactiveMongoComponents  with StationsJson  {
