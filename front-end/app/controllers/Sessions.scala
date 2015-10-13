@@ -1,6 +1,6 @@
 package controllers
 
-import models.SessionsJson
+import models.{CreateSession, CreateStation, SessionsJson}
 
 import play.api.mvc._
 import play.api.libs.json._
@@ -32,6 +32,16 @@ class Sessions @Inject() (val reactiveMongoApi: ReactiveMongoApi)
     store.get(poleid, startDate, endDate).collect[Seq]().map(
       stations => Ok(Json.toJson(stations))
     )
+  }
+
+  // TODO: make this request async
+  def create(poleid: String) = Action(parse.json[CreateSession]) { implicit request =>
+    store.create(poleid,request.body.startDate, request.body.endDate, request.body.kwh, request.body.price) match {
+      case Some(Session) => {
+        Ok(Json.parse("{\"success\":true}"))
+      }
+      case None => Ok(Json.parse("{\"success\":false,\"errormsg\":\"heartbeat failed\"}"))
+    }
   }
 
 }

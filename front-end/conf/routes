@@ -3,34 +3,39 @@
 # ~~~~
 
 # Home page
-GET           /                      controllers.Application.index
+GET           /                                controllers.Application.index
 
-GET           /stationsfeed          controllers.Stations.feed
-GET           /stations              controllers.Stations.list
+GET           /stationsfeed                    controllers.Stations.feed
+GET           /stations                        controllers.Stations.list
 
-GET           /stations/:id          controllers.Stations.details(id: String)
+GET           /stations/:id                    controllers.Stations.details(id: String)
 
-PUT           /heartbeat/:id         controllers.Stations.heartbeat(id: String)
+PUT           /heartbeat/:id                   controllers.Stations.heartbeat(id: String)
 
-GET           /test                  controllers.Sockets.socket
-GET           /stuff                 controllers.Sockets.stuff
+GET           /sessions                        controllers.Sessions.list
+GET           /sessions/:id/:start/:end        controllers.Sessions.details(id :String,start:Long,end:Long)
+PUT           /sessions/:id                    controllers.Sessions.create(id)
+
+
+GET           /test                            controllers.Sockets.socket
+GET           /stuff                           controllers.Sockets.stuff
 
 # Location
-GET           /location              controllers.Application.location
+GET           /location                        controllers.Application.location
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)
 
 # Shop
-GET           /items                 controllers.Items.list(page: Int ?= 1)
-POST          /items                 controllers.Items.createFromJson
+GET           /items                           controllers.Items.list(page: Int ?= 1)
+POST          /items                           controllers.Items.createFromJson
 
-GET           /items/create          controllers.Items.createForm
-POST          /items/create          controllers.Items.createFromForm
+GET           /items/create                    controllers.Items.createForm
+POST          /items/create                    controllers.Items.createFromForm
 
-GET           /items/:id             controllers.Items.details(id: Long)
-PUT           /items/:id             controllers.Items.update(id: Long)
-DELETE        /items/:id             controllers.Items.delete(id: Long)
+GET           /items/:id                       controllers.Items.details(id: Long)
+PUT           /items/:id                       controllers.Items.update(id: Long)
+DELETE        /items/:id                       controllers.Items.delete(id: Long)
 
-GET           /items/:id/json        controllers.Items.detailsJson(id: Long)
+GET           /items/:id/json                  controllers.Items.detailsJson(id: Long)
 
