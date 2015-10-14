@@ -84,7 +84,7 @@ var grid = $("#jqGrid").jqGrid({
     url: '/stations',
     datatype: "json",
     colModel: [
-        { label: 'Pole ID', name: 'id', width: 150 },
+        { label: 'Pole ID', name: 'id', width: 150, formatter: 'showLink', formatoptions:{ onClick: function() { alert('test'); } } },
         //{ label: 'Street', name: 'street', width: 90 },
         //{ label: 'City', name: 'city', width: 100 },
         { label: 'Status', name: 'status', width: 80, sorttype: 'text',  formatter: convertStatus},
@@ -93,7 +93,7 @@ var grid = $("#jqGrid").jqGrid({
     autowidth: true,
     shrinkToFit: true,
     height: 500,
-    rowNum: 30,
+    rowNum: 100,
     pager: "#jqGridPager"
 });
 
@@ -197,4 +197,11 @@ function initMap() {
             });
         });
     }
+
+    google.maps.event.addDomListener(window, "resize", function() {
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center);
+    });
 };
+
