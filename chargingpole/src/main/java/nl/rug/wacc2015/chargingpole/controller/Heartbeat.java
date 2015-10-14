@@ -24,7 +24,7 @@ public class Heartbeat implements Runnable {
 	private Logger l;
 
 	/**
-	 * Send an update every 30 seconds
+	 * Send an update every 10 seconds
 	 */
 	private static final long HEART_RATE = 1000 * 10;
 
@@ -32,7 +32,8 @@ public class Heartbeat implements Runnable {
 		this.ss = ss;
 		l = LoggerFactory.getLogger(Heartbeat.class);
 		Client c = ClientBuilder.newClient();
-		resource = c.target(ss.getServer());
+		resource = c.target(ss.getServer() + "heartbeat/" + ss.getPoleIDString());
+		l.debug(resource.getUri().toString());
 	}
 
 	private void doRequest() {

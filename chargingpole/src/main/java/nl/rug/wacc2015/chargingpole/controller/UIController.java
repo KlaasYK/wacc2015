@@ -41,6 +41,7 @@ public class UIController implements ActionListener {
 				// Update session store
 				try {
 					ss.startSession(s);
+					// Heartbeat picks update
 				} catch (RuntimeException e) {
 					l.warn("RuntimeException: {}", e.getMessage());
 				}

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.rug.wacc2015.chargingpole.controller.ChargeController;
+import nl.rug.wacc2015.chargingpole.util.WebClient;
 
 /**
  * Class representing a database of stored session and running session
@@ -33,8 +34,7 @@ public class SessionStorage extends Observable implements Observer {
 	private double kwhpersec = 0.01;
 	private double priceperkwh = 0.24;
 	
-	// TODO: read this from file
-	private String server = "http://localhost:9000/heartbeat";
+	private String server = "";
 
 	private List<ChargeSession> sessionsReadyToSend;
 	private List<ChargeSession> sessionsStored;
@@ -129,7 +129,12 @@ public class SessionStorage extends Observable implements Observer {
 		} catch (InterruptedException e) {
 			l.error("SessionStorage Interrupted");
 		}
-		addSessionReadyToSend(currentsession);
+		//addSessionReadyToSend(currentsession);
+		
+		WebClient wc = new WebClient(getServer());
+		wc.sendSession("sessions/"+getPoleIDString(), currentsession.getJSON());
+		// TODO: check if insert was successful
+		addSessionStored(currentsession);
 		currentsession = null;
 		updateGUI();
 	}
@@ -150,6 +155,7 @@ public class SessionStorage extends Observable implements Observer {
 	 */
 	public String getJSON() {
 		String s = "{\"poleID\":\"" + poleID + ",";
+		s += "\"serveraddress\":\"" + server + "\"";
 		s += "\"longitude\":" + longitude + ",";
 		s += "\"latitude\":" + latitude + ",";
 		if (currentsession != null) {
@@ -189,7 +195,7 @@ public class SessionStorage extends Observable implements Observer {
 	}
 
 	public String getServer() {
-		return server + "/" + getPoleIDString();
+		return server;
 	}
 
 	public String getServerJSON() {
@@ -197,11 +203,11 @@ public class SessionStorage extends Observable implements Observer {
 		s += "\"longitude\":" + longitude + ",";
 		s += "\"latitude\":" + latitude + ",";
 		if (currentsession != null) {
-			s += "\"status\":"+CHARGING+",";
+			s += "\"status\":"+CHARGING+"}";
 		} else {
-			s += "\"status\":"+IDLE+",";
+			s += "\"status\":"+IDLE+"}";
 		}
-		s += "\"sessions\":[";
+		/*s += "\"sessions\":[";
 		Iterator<ChargeSession> it = sessionsReadyToSend.iterator();
 		while (it.hasNext()) {
 			s += it.next().getJSON();
@@ -209,7 +215,7 @@ public class SessionStorage extends Observable implements Observer {
 				s += ",";
 			}
 		}
-		s += "]}";
+		s += "]}";*/
 		return s;
 	}
 
@@ -231,6 +237,11 @@ public class SessionStorage extends Observable implements Observer {
 			throw new JSONException("Could not find poleID");
 		}
 		poleID = o.getString("poleID");
+		
+		if (!o.has("serveraddress")) {
+			throw new JSONException("Could not find serveraddress");
+		}
+		server = o.getString("serveraddress");
 		
 		if (!o.has("longitude")) {
 			throw new JSONException("Could not find longitude");
@@ -270,6 +281,7 @@ public class SessionStorage extends Observable implements Observer {
 
 	public void initEmpty(String poleid) {
 		poleID = poleid;
+		server="http://chargingpoles.com/";
 		longitude = 0;
 		latitude = 0;
 	}

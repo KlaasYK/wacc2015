@@ -85,7 +85,7 @@ public class App {
 		
 		Thread ht = new Thread(new Heartbeat(ss));
 		ht.setDaemon(true);
-		ht.setName("hearbeat");
+		ht.setName("heartbeat");
 		ht.start();
 	}
 

@@ -1,8 +1,8 @@
 {
-	"poleID":"P0002",
+	"poleID":"P0003",
 	"serveraddress":"http://chargingpoles.com/",
-	"longitude":54.1,
-	"latitude":4.1,
+	"longitude":54.2,
+	"latitude":4.2,
 	"sessionsStored":[],
 	"sessionsReadyToSend":[]
 }
