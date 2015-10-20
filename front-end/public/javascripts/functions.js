@@ -11,6 +11,8 @@ var DOWNTIMEOUT = 25000;
 
 $.jgrid.defaults.styleUI = 'Bootstrap';
 
+$('#locationinfo').hide();
+
 function setTimeOutClosure(poleid) {
     return setTimeout(function(){
         poledata[poleid].status = pstatus.DOWN;
@@ -94,7 +96,10 @@ var grid = $("#jqGrid").jqGrid({
     shrinkToFit: true,
     height: 500,
     rowNum: 100,
-    pager: "#jqGridPager"
+    pager: "#jqGridPager",
+    onSelectRow: function(id){
+        showSession(id);
+    }
 });
 
 $.getJSON( "./stations", function( jsondata ) {
@@ -118,6 +123,71 @@ $.getJSON( "./stations", function( jsondata ) {
         }
     }
 });
+
+/*
+$.getJSON( "./sessions/TEST1234/1443816282212/1444816487220", function( jsondata ) {
+    console.log(jsondata);
+    $('#station-id').html(jsondata[0].poleid);
+    createSessionGrid(jsondata);
+});
+
+$.getJSON( "./sessions/POLE-0002/1443816282212/1444816487220", function( jsondata ) {
+    console.log("x");
+    jQuery("#locationGrid")
+        .jqGrid('setGridParam',
+        {
+            datatype: 'local',
+            data:jsondata
+        })
+        .trigger("reloadGrid");
+
+});
+*/
+
+var locationgrid;
+
+function showSession(poleid)
+{
+    $('#map').slideUp();
+    $('#locationinfo').slideDown();
+    $('#station-id').html(poleid);
+    $.getJSON( "./sessions/"+poleid+"/"+(Date.now() - (60*60*24*7))+"/"+Date.now()+"", function( jsondata ) {
+
+        if ( locationgrid != null )
+        {
+            $("#locationGrid").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#locationGrid").jqGrid('setGridParam',{datatype: 'local',data:jsondata}).trigger("reloadGrid");
+        }
+        else
+        {
+            createSessionGrid(jsondata);
+            $("#locationGrid").jqGrid('setGridParam',{datatype: 'local',data:jsondata}).trigger("reloadGrid");
+        }
+    });
+}
+
+
+
+function createSessionGrid(data)
+{
+    locationgrid = $("#locationGrid").jqGrid({
+        url: data,
+        datatype: "local",
+        colModel: [
+            { label: 'Start', name:'startDate', width: 100, formatter:'date', formatoptions: {srcformat: 'U/1000', newformat:'d/m/Y H:i:s'}},
+            { label: 'End', name:'endDate', width: 100, formatter:'date', formatoptions: {srcformat: 'U/1000', newformat:'d/m/Y H:i:s'}},
+            { label: 'kwh', name: 'kwh', width: 50, formatter:'number', formatoptions: {decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, defaultValue: '0.00'}},
+            { label: 'Price', name: 'price', width: 50, formatter:'currency', formatoptions: {prefix:'€', thousandsSeparator:'.'}},
+        ],
+        autowidth: true,
+        shrinkToFit: true,
+        sortname: 'startDate',
+        sortorder: 'desc',
+        height: 500,
+        rowNum: 100,
+        pager: "#locationPager"
+    });
+}
 
 function updateNotifications()
 {
