@@ -3,6 +3,7 @@ package controllers
 import models.{CreateStation, StationsJson}
 import play.api.libs.iteratee.{Iteratee, Concurrent}
 import play.api.libs.iteratee.Concurrent.Channel
+import play.api.libs.ws.WS
 import play.api.mvc._
 import play.api.libs.json._
 
@@ -16,11 +17,16 @@ ReactiveMongoApi,
 ReactiveMongoComponents
 }
 
+import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   extends Controller with MongoController with ReactiveMongoComponents  with StationsJson  {
   val store = models.StationStore
+  val watcher = models.ETCDWatcher
+
+  // TODO: load this from somewhere
+  val base = "http://heartbeat1:2379/v2/keys/poles/"
 
   var feedConnections : List[Channel[String]] = Nil
 
@@ -28,6 +34,8 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
 
     // Concurrent.broadcast returns (Enumerator, Concurrent.Channel)
     val (out, channel) = Concurrent.broadcast[String]
+
+    watcher.addListener(channel)
 
     // log the message to stdout and send response back to client
     feedConnections ::= channel
@@ -38,6 +46,7 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
     }).map(_ => {
       // unregister
       feedConnections = feedConnections.filterNot( _ == channel)
+      watcher.removeListener(channel)
     })
     (in,out)
   }
@@ -55,13 +64,20 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
     }
   }
 
+  // TODO: function to be called with actor from etcd
+
   def heartbeat(id: String) = Action.async(parse.json[CreateStation]) { implicit request =>
    store.get(id).map {
       case Some(station) => {
         store.heartbeat(id,request.body.latitude, request.body.longitude, request.body.status) match {
           case Some(station) => {
-            // Push to rabbitmq for other services
-            feedConnections.foreach(_.push(Json.toJson(station).toString()))
+            // TODO: use this somewhere feedConnections.foreach(_.push(Json.toJson(station).toString()))
+            // TODO: make 30 seconds somewhere variable
+            WS.url(base + id).withHeaders("Content-Type"->"application/x-www-form-urlencoded").put("value=" + station.status + "&ttl=30").map {
+              result =>
+                // TODO: this is fire and forget, maybe check result...
+                //println(result.json);
+            }
             Ok(Json.parse("{\"success\":true}"))
           }
           case None => Ok(Json.parse("{\"success\":false,\"errormsg\":\"heartbeat failed\"}"))
@@ -73,8 +89,13 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
           case Some(station) => {
             store.heartbeat(id,request.body.latitude, request.body.longitude, request.body.status) match {
               case Some(station) => {
-                // Push to rabbitmq for other services
-                feedConnections.foreach(_.push(Json.toJson(station).toString()))
+                // TODO: make 30 seconds somewhere variable
+                WS.url(base + id).withHeaders(("Content-Type","application/x-www-form-urlencoded")).put("value=" + station.status + "&ttl=30").map {
+                  result =>
+                    // TODO: this is fire and forget, maybe check result...
+                    //println(result.json);
+                }
+
                 Ok(Json.parse("{\"success\":true}"))
               }
               case None => Ok(Json.parse("{\"success\":false,\"errormsg\":\"heartbeat failed\"}"))
