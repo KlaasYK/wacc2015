@@ -13,19 +13,17 @@ $.jgrid.defaults.styleUI = 'Bootstrap';
 
 $('#locationinfo').hide();
 
-function setTimeOutClosure(poleid) {
-    return setTimeout(function(){
-        poledata[poleid].status = pstatus.DOWN;
+function setDown(poleid) {
+    poledata[poleid].status = pstatus.DOWN;
 
-        // Update grid
-        var rowData = $('#jqGrid').jqGrid('getRowData', poleid);
-        rowData.status = 0;
-        $('#jqGrid').jqGrid('setRowData', poleid, rowData);
+    // Update grid
+    var rowData = $('#jqGrid').jqGrid('getRowData', poleid);
+    rowData.status = 0;
+    $('#jqGrid').jqGrid('setRowData', poleid, rowData);
 
-        // TODO: Update notifications
-        notifications.unshift([0, poleid]);
-        updateNotifications();
-    },DOWNTIMEOUT);
+    notifications.unshift([0, poleid]);
+    updateNotifications();
+
 }
 
 $(document).ready(function () {
@@ -37,6 +35,7 @@ $(document).ready(function () {
     };
 
     socket.onmessage = function (event) {
+        console.log(event.data);
         var pole = JSON.parse(event.data);
 
         // Update grid
@@ -45,10 +44,10 @@ $(document).ready(function () {
         else
             $('#jqGrid').jqGrid('addRowData', pole.id, pole);
 
-        if (poledata[pole.id] && poledata[pole.id].timeout) {clearTimeout(poledata[pole.id].timeout); }
-
         poledata[pole.id] = pole;
-        poledata[pole.id].timeout = setTimeOutClosure(pole.id);
+        if (pole.status == pstatus.DOWN) {
+            setDown(pole.id);
+        }
     };
 
     socket.onclose = function () {
@@ -112,9 +111,10 @@ $.getJSON( "./stations", function( jsondata ) {
         var curtime = new Date().getTime();
         if (pole.status != pstatus.DOWN && (pole.lastHeartbeat + DOWNTIMEOUT) > curtime) {
             // Set timeout
-            poledata[pole.id].timeout = setTimeOutClosure(pole.id);
+            // TODO: remove this, timeouts are handled by the server now
         } else {
             poledata[pole.id].status = pstatus.DOWN;
+            // FIXME: show notifcations if down at page load?
 
             // Set pole as offline in grid
             var rowData = $('#jqGrid').jqGrid('getRowData', pole.id);
