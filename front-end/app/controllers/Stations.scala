@@ -26,7 +26,7 @@ class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   val watcher = ETCDWatcher
 
   // TODO: load this from somewhere
-  val base = "http://heartbeat1:2379/v2/keys/poles/"
+  val base = "http://104.155.50.1:5001/v2/keys/poles/"
 
   var feedConnections : List[Channel[String]] = Nil
 

@@ -9,7 +9,7 @@ object Global extends GlobalSettings {
   override def onStart(app: Application): Unit = {
     val watcher = ETCDWatcher
     // TODO: load this from file or settings or something similar
-    watcher.start("http://heartbeat1:4001/v2/keys/poles?wait=true&recursive=true",0);
+    watcher.start("http://104.155.50.1:5001/v2/keys/poles?wait=true&recursive=true",0);
   }
 
   override def onHandlerNotFound(request: RequestHeader) = {
