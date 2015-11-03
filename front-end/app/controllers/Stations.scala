@@ -23,7 +23,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 class Stations @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   extends Controller with MongoController with ReactiveMongoComponents  with StationsJson  {
   val store = models.StationStore
-  val watcher = models.ETCDWatcher
+  val watcher = ETCDWatcher
 
   // TODO: load this from somewhere
   val base = "http://heartbeat1:2379/v2/keys/poles/"

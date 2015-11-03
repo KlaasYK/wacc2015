@@ -1,10 +1,9 @@
-package models
+package controllers
 
+import play.api.Play.current
 import play.api.libs.iteratee.Concurrent.Channel
 import play.api.libs.json.Json
 import play.api.libs.ws.WS
-
-import play.api.Play.current
 
 trait ETCDWatcher {
   def start(uri : String, index : Int)
