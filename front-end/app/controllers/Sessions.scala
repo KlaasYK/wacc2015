@@ -20,7 +20,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 class Sessions @Inject() (val reactiveMongoApi: ReactiveMongoApi)
   extends Controller with MongoController with ReactiveMongoComponents with SessionsJson  {
-  val store = models.SessionionStore
+  val store = models.SessionStore
 
   def list = Action.async {
     store.list.collect[Seq]().map(

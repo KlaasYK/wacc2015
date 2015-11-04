@@ -114,6 +114,29 @@
                     </div>
                     <div class="col-md-6 hidden-xs">
                         <div id="locationinfo">
+                            <div id="usage" class="card">
+                                <div class="card-header">
+                                    <div class="media">
+                                        <div class="pull-left">
+                                            <i class="zmdi zmdi-format-list-numbered zmdi-hc-fw"></i>
+                                        </div>
+
+                                        <div class="media-body m-t-5">
+                                            <h2><span class="station-id"></span> <small>Station Usage</small></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding: 20px;">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <p><span id="kwh"></span> kwh</p>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <p>&euro;<span id="price"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="locationinfo" class="card">
                                 <div class="card-header">
                                     <div class="media">
@@ -122,7 +145,7 @@
                                         </div>
 
                                         <div class="media-body m-t-5">
-                                            <h2>Sessions <span id="station-id"></span> <small>Sessions in the last 7 days</small></h2>
+                                            <h2>Sessions <span class="station-id"></span> <small>Sessions in the last 7 days</small></h2>
                                         </div>
                                     </div>
                                 </div>

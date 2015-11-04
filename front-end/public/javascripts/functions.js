@@ -124,33 +124,23 @@ $.getJSON( "./stations", function( jsondata ) {
     }
 });
 
-/*
-$.getJSON( "./sessions/TEST1234/1443816282212/1444816487220", function( jsondata ) {
-    console.log(jsondata);
-    $('#station-id').html(jsondata[0].poleid);
-    createSessionGrid(jsondata);
-});
-
-$.getJSON( "./sessions/POLE-0002/1443816282212/1444816487220", function( jsondata ) {
-    console.log("x");
-    jQuery("#locationGrid")
-        .jqGrid('setGridParam',
-        {
-            datatype: 'local',
-            data:jsondata
-        })
-        .trigger("reloadGrid");
-
-});
-*/
-
 var locationgrid;
 
 function showSession(poleid)
 {
+    $("#usage").hide();
+    $("#kwh").hide();
+    $("#price").hide();
     $('#map').slideUp();
     $('#locationinfo').slideDown();
-    $('#station-id').html(poleid);
+    $('.station-id').html(poleid);
+
+    $.getJSON( "./usage/"+poleid, function( usagejson ) {
+        $("#usage").show();
+        $("#kwh").show().html((usagejson.kwh).toFixed(2));
+        $("#price").show().html((usagejson.price).toFixed(2));
+    });
+
     $.getJSON( "./sessions/"+poleid+"/"+(Date.now() - (60*60*24*7))+"/"+Date.now()+"", function( jsondata ) {
 
         if ( locationgrid != null )
@@ -165,8 +155,6 @@ function showSession(poleid)
         }
     });
 }
-
-
 
 function createSessionGrid(data)
 {
@@ -231,6 +219,7 @@ function convertStatus(cellValue)
     }
 }
 
+
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 52.0833, lng: 5.1167},
@@ -238,6 +227,7 @@ function initMap() {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
     });
 
+/*
     // Place markers on map
     for( i = 0; i < json.length; i++) {
         var color = ( json[i].isActive ) ? '#8BC34A' : '#FF5722';
@@ -267,6 +257,7 @@ function initMap() {
             });
         });
     }
+ */
 
     google.maps.event.addDomListener(window, "resize", function() {
         var center = map.getCenter();

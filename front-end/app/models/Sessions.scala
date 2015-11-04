@@ -35,7 +35,7 @@ trait SessionStore {
   def get(poleid: String, startDate: Long, endDate: Long): Cursor[Session]
 }
 
-object SessionionStore  extends SessionStore with SessionsJson{
+object SessionStore  extends SessionStore with SessionsJson{
   implicit val sessionReads = Json.reads[Session]
 
   lazy val reactiveMongoApi = current.injector.instanceOf[ReactiveMongoApi]
