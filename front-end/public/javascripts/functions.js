@@ -27,7 +27,7 @@ function setDown(poleid) {
 }
 
 $(document).ready(function () {
-    var socket = new WebSocket('ws://' + location.host + "/stationsfeed");
+    var socket = new WebSocket("ws://chargingpoles.com/stationsfeed");
 
     // REMOVE test
     socket.onopen = function () {
